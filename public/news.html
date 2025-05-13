@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portal Berita Komunitas | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Tombol burger di pojok kiri -->
+  <button class="menu-toggle" id="burgerBtn">☰</button>
+
+  <!-- Sidebar kiri -->
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <!-- Konten utama -->
+  <div class="main-content">
+    <h2>Berita Komunitas</h2>
+    <div id="newsList"></div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/news')
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('newsList');
+          if (data.length === 0) return list.innerHTML = '<p>Tidak ada laporan tersedia.</p>';
+
+          data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+              <h4>${item.title} (${item.category})</h4>
+              <p><strong>Wilayah:</strong> ${item.region}</p>
+              <p>${item.description}</p>
+              ${item.image ? `<img src="${item.image}" alt="foto" width="200" />` : ''}
+              ${item.geo_link ? `<p><a href="${item.geo_link}" target="_blank">Lihat Lokasi</a></p>` : ''}
+            `;
+            list.appendChild(div);
+          });
+        });
+    });
+  </script>
+</body>
+</html>

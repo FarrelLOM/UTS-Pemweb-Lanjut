@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel PLN</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Admin PLN Panel</h2>
+
+    <section class="container">
+      <h3>⚡ Penjualan Energi Aktif</h3>
+      <div id="energyList"><p>Memuat data...</p></div>
+    </section>
+
+    <section class="container">
+      <h3>💰 Permintaan Top-Up</h3>
+      <div id="topupList"><p>Memuat data...</p></div>
+    </section>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Ambil daftar energi
+    fetch('/admin/energy-sales')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('energyList');
+        container.innerHTML = '';
+        if (!data.length) {
+          container.innerHTML = '<p>Tidak ada penjualan energi.</p>';
+          return;
+        }
+
+        data.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'item-box';
+          div.innerHTML = `
+            <h4>${item.name}</h4>
+            <p>Harga/kWh: Rp ${item.price}</p>
+            <p>Seller: ${item.seller_email}</p>
+            <button onclick="buyEnergy(${item.id})">Beli Energi</button>
+          `;
+          container.appendChild(div);
+        });
+      });
+
+    // Ambil daftar topup
+    fetch('/admin/topups')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('topupList');
+        container.innerHTML = '';
+        if (!data.length) {
+          container.innerHTML = '<p>Tidak ada permintaan top-up.</p>';
+          return;
+        }
+
+        data.forEach(topup => {
+          const div = document.createElement('div');
+          div.className = 'item-box';
+          div.innerHTML = `
+            <p>User: ${topup.email}</p>
+            <p>Jumlah: Rp ${topup.amount}</p>
+            <button onclick="approveTopup(${topup.id})">Setujui Top-Up</button>
+          `;
+          container.appendChild(div);
+        });
+      });
+
+    // Fungsi setujui top-up
+    function approveTopup(id) {
+      fetch(`/admin/topups/approve/${id}`, { method: 'POST' })
+        .then(() => {
+          alert('Top-Up disetujui');
+          location.reload();
+        });
+    }
+
+    // Fungsi beli energi
+    function buyEnergy(id) {
+      fetch(`/admin/energy/buy/${id}`, { method: 'POST' })
+        .then(() => {
+          alert('Energi berhasil dibeli');
+          location.reload();
+        });
+    }
+  </script>
+</body>
+</html>

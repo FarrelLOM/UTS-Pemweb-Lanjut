@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shop | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Daftar Alat Energi</h2>
+    <div id="itemList" class="item-grid">Memuat produk...</div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    fetch('/shop')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('itemList');
+        container.innerHTML = '';
+
+        if (!data.length) {
+          container.innerHTML = '<p>Tidak ada produk tersedia.</p>';
+          return;
+        }
+
+        data.forEach(item => {
+          const disabled = item.stock <= 0 ? 'disabled' : '';
+          const box = document.createElement('div');
+          box.className = 'item-box';
+          box.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" />
+            <h4>${item.name}</h4>
+            <p>Harga: Rp ${item.price}</p>
+            <p>Stok: ${item.stock}</p>
+            <button onclick="addToCart(${item.id})" ${disabled}>Tambah ke Keranjang</button>
+            <button onclick="buyNow(${item.id})" ${disabled}>Beli Sekarang</button>
+          `;
+          container.appendChild(box);
+        });
+      });
+
+    function addToCart(itemId) {
+      fetch('/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId })
+      }).then(res => res.json())
+        .then(data => {
+          if (data.success) alert('Berhasil ditambahkan ke keranjang!');
+          else alert(data.message || 'Gagal menambahkan ke keranjang');
+        });
+    }
+
+    function buyNow(itemId) {
+      fetch('/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId })
+      }).then(() => {
+        window.location.href = 'checkout.html';
+      });
+    }
+  </script>
+</body>
+</html>

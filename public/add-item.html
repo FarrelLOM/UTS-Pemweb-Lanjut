@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jual Produk Energi / Alat | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Tombol burger di pojok kiri -->
+  <button class="menu-toggle" id="burgerBtn">☰</button>
+
+  <!-- Sidebar kiri -->
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <!-- Konten utama -->
+  <div class="main-content">
+    <h2>Form Penjualan Produk</h2>
+    <form id="addItemForm" enctype="multipart/form-data">
+      <label for="jenis">Jenis Penjualan</label>
+      <select id="jenis" name="jenis">
+        <option value="energi">Jual Energi</option>
+        <option value="alat">Jual Alat</option>
+      </select>
+
+      <label for="name">Nama Produk</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="description">Deskripsi</label>
+      <textarea id="description" name="description" required></textarea>
+
+      <label for="price">Harga (Rp)</label>
+      <input type="number" id="price" name="price" required>
+
+      <div id="formEnergi">
+        <label for="jumlah">Jumlah Energi (Wh)</label>
+        <input type="number" id="jumlah" name="jumlah">
+
+        <label for="lokasi">Link Geolokasi Pemasangan</label>
+        <input type="url" id="lokasi" name="lokasi">
+      </div>
+
+      <div id="formAlat" style="display: none;">
+        <label for="stok">Jumlah Alat (Stok)</label>
+        <input type="number" id="stok" name="stok">
+      </div>
+
+      <label for="gambar">Upload Gambar</label>
+      <input type="file" id="gambar" name="gambar" accept="image/*">
+
+      <button type="submit">Jual Sekarang</button>
+    </form>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/add-item.js"></script>
+</body>
+</html>

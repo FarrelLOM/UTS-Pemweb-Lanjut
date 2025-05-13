@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Akun</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="index.html" class="nav-link" onclick="logout()">🚪 Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Edit Akun</h2>
+
+    <form id="editForm" enctype="multipart/form-data">
+      <label>Email Baru</label>
+      <input type="email" name="email" placeholder="Email baru" required />
+
+      <label>Password Baru</label>
+      <input type="password" name="password" placeholder="Password baru" required />
+
+      <label>Foto Profil (optional)</label>
+      <input type="file" name="foto" accept="image/*" />
+
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('editForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      fetch('/account/update', {
+        method: 'POST',
+        body: formData
+      }).then(res => res.json())
+        .then(data => {
+        console.log(data); // ⬅️ Tambahkan ini
+        if (data.success) {
+            alert("Akun berhasil diperbarui!");
+            window.location.href = "account.html";
+        } else {
+            alert(data.message || "Gagal memperbarui akun");
+        }
+        });
+    });
+  </script>
+</body>
+</html>

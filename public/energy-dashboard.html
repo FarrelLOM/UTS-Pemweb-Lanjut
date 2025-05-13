@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Energy Dashboard | PLN</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Pembangkit Energi Aktif (Seller)</h2>
+    <div class="container" id="generatorList">
+      <p>Memuat data...</p>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    fetch('/energy/active-generators')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('generatorList');
+        list.innerHTML = '';
+
+        if (data.length === 0) {
+          list.innerHTML = '<p>Tidak ada pembangkit aktif saat ini.</p>';
+          return;
+        }
+
+        data.forEach(gen => {
+          const div = document.createElement('div');
+          div.className = 'item-box';
+          div.innerHTML = `
+            <h4>${gen.name}</h4>
+            <p>Harga per kWh: Rp${gen.price}</p>
+            <p>Lokasi: ${gen.geo_link}</p>
+            <p>Energi/hari: ${gen.energy_wh || 0} Wh</p>
+          `;
+          list.appendChild(div);
+        });
+      });
+  </script>
+</body>
+</html>

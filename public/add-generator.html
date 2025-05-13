@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tambah Generator | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Tombol burger di pojok kiri -->
+  <button class="menu-toggle" id="burgerBtn">☰</button>
+
+  <!-- Sidebar kiri -->
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <!-- Konten utama -->
+  <div class="main-content">
+    <h2>Tambah Generator Baru</h2>
+    <form id="generatorForm">
+      <label for="name">Nama Generator</label>
+      <input type="text" id="name" required />
+
+      <label for="capacity">Kapasitas (kW)</label>
+      <input type="number" id="capacity" required />
+
+      <button type="submit">Tambah</button>
+    </form>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('generatorForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const capacity = document.getElementById('capacity').value;
+
+      fetch('/generators', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, capacity })
+      }).then(res => {
+        if (res.ok) {
+          alert('Generator ditambahkan.');
+          window.location.href = '/dashboard-user.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

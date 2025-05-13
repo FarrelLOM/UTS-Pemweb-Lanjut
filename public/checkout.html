@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Checkout</h2>
+
+    <div id="cartSummary" class="container">Memuat keranjang...</div>
+
+    <form id="checkoutForm" class="container">
+      <label>Metode Pembayaran</label>
+      <select name="metode" required>
+        <option value="transfer">Transfer Bank</option>
+        <option value="dompet">Dompet Digital</option>
+      </select>
+
+      <label>Alamat Pengiriman</label>
+      <textarea name="alamat" required></textarea>
+
+      <button type="submit">Konfirmasi & Bayar</button>
+    </form>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let total = 0;
+
+    fetch('/cart')
+      .then(res => res.json())
+      .then(data => {
+        const div = document.getElementById('cartSummary');
+        div.innerHTML = '';
+
+        if (!data.length) {
+          div.innerHTML = '<p>Keranjang kosong.</p>';
+          return;
+        }
+
+        const list = document.createElement('ul');
+        data.forEach(item => {
+          total += item.price;
+          const li = document.createElement('li');
+          li.innerHTML = `${item.name} - Rp ${item.price}`;
+          list.appendChild(li);
+        });
+
+        const totalDiv = document.createElement('p');
+        totalDiv.innerHTML = `<strong>Total: Rp ${total.toLocaleString()}</strong>`;
+
+        div.appendChild(list);
+        div.appendChild(totalDiv);
+      });
+
+    document.getElementById('checkoutForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+
+      fetch('/checkout', {
+        method: 'POST',
+        body: new URLSearchParams(formData)
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert('Pembayaran berhasil!');
+            window.location.href = 'account.html';
+          } else {
+            alert(data.message || 'Gagal checkout');
+          }
+        });
+    });
+  </script>
+</body>
+</html>

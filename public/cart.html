@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Keranjang | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Keranjang Anda</h2>
+    <div id="cartItems" class="item-grid">Memuat...</div>
+    <button onclick="checkout()">Checkout</button>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Ambil isi keranjang dari server
+    fetch('/cart')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('cartItems');
+        container.innerHTML = '';
+        if (!data.length) {
+          container.innerHTML = '<p>Keranjang kosong</p>';
+          return;
+        }
+
+        data.forEach(item => {
+          const box = document.createElement('div');
+          box.className = 'item-box';
+          box.innerHTML = `
+            <h4>${item.name}</h4>
+            <p>Rp ${item.price}</p>
+          `;
+          container.appendChild(box);
+        });
+      });
+
+    // Arahkan ke checkout.html
+    function checkout() {
+      window.location.href = 'checkout.html';
+    }
+  </script>
+</body>
+</html>

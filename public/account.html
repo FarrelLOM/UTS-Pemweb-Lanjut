@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Akun Saya | PLN Energy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Tombol burger di pojok kiri -->
+  <button class="menu-toggle" id="burgerBtn">☰</button>
+
+  <!-- Sidebar kiri -->
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <!-- Konten utama -->
+       <div class="main-content">
+      <h2>Informasi Akun</h2>
+  <div style="display: flex; align-items: center; gap: 20px;">
+  <img id="fotoProfil" src="" alt="Foto Profil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
+
+      <div id="account-info"></div>
+      <button onclick="logout()" class="button red">Logout</button> <button onclick="window.location.href='edit-account.html'">✏️ Edit Akun</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <h3>Saldo Dompet Digital & Energi Mandiri</h3>
+    <p id="saldoText">Rp -</p>
+    <button onclick="window.location.href='topup.html'">Top-Up Saldo</button>
+    <button onclick="location.href='payout.html'">💸 Cairkan Saldo</button>
+    <button onclick="window.location.href='add-generator.html'">➕ Tambah Generator</button>
+    <button onclick="window.location.href='dashboard-user.html'">📊 Dashboard Energi</button>  
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      fetch('/account')
+        .then(res => res.json())
+        .then(user => {
+          const container = document.getElementById('account-info');
+          container.innerHTML = `
+            <p><strong>Username:</strong> ${user.username}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+          `;
+                if (user.image) {
+                  document.getElementById('fotoProfil').src = `/uploads/${user.image}`;
+                } else {
+                  document.getElementById('fotoProfil').src = 'https://via.placeholder.com/100?text=User';
+                }
+        });
+    });
+  </script>
+</body>
+</html>

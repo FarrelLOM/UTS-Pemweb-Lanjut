@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Peta Mikrogrid Komunitas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <style>
+    #map {
+      height: 80vh;
+      width: 100%;
+      border-radius: 8px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body class="no-sidebar">
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+
+  <div class="sidebar" id="sidebarMenu">
+    <a href="shop.html" class="nav-link">🛒 Shop</a>
+    <a href="cart.html" class="nav-link">🧺 Keranjang</a>
+    <a href="account.html" class="nav-link">👤 Akun</a>
+    <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
+    <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
+    <a href="report.html" class="nav-link">📣 Lapor</a>
+    <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
+    <a href="topup.html" class="nav-link">💰 Top-Up</a>
+    <a href="payout.html" class="nav-link">💸 Cairkan</a>
+    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
+    <a href="news.html" class="nav-link">📰 Berita</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Peta Mikrogrid Komunitas</h2>
+    <div id="map"></div>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+  <script src="js/main.js"></script>
+  <script>
+    // Inisialisasi peta
+    const map = L.map('map').setView([-6.2, 106.8], 11); // Koordinat default Jakarta
+
+    // Tambahkan tile dari OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Ambil titik lokasi dari backend
+    fetch('/mikrogrid')
+      .then(res => res.json())
+      .then(locations => {
+        if (!locations.length) {
+          alert('Belum ada data mikrogrid.');
+        }
+
+        locations.forEach(loc => {
+          L.marker([loc.lat, loc.lon])
+            .addTo(map)
+            .bindPopup(`<strong>${loc.name}</strong><br>Koordinat: ${loc.lat}, ${loc.lon}`);
+        });
+      })
+      .catch(err => {
+        console.error('Gagal memuat titik mikrogrid:', err);
+      });
+  </script>
+</body>
+</html>
