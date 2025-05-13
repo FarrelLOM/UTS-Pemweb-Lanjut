@@ -58,7 +58,7 @@ app.use((req, res) => {
 });
 
 // Jalankan server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 61001;
 app.listen(PORT, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+  console.log(`🚀 Server berjalan di port:${PORT}`);
 });
