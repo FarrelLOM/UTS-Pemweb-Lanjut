@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Akun Saya | PLN Energy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -25,23 +26,37 @@
   </div>
 
   <!-- Konten utama -->
-       <div class="main-content">
+  <div class="main-content">
       <h2>Informasi Akun</h2>
-  <div style="display: flex; align-items: center; gap: 20px;">
-  <img id="fotoProfil" src="" alt="Foto Profil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
-
+      <div style="display: flex; align-items: center; gap: 20px;">
+      <img id="fotoProfil" src="" alt="Foto Profil" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
       <div id="account-info"></div>
       <button onclick="logout()" class="button red">Logout</button> <button onclick="window.location.href='edit-account.html'">✏️ Edit Akun</button>
+      <button onclick="window.location.href='edit-account.html'">✏️ Edit Akun</button>
+      <h3>Saldo Dompet Digital & Energi Mandiri</h3>
+      <p id="saldoText">Rp -</p>
+      <button onclick="window.location.href='topup.html'">Top-Up Saldo</button>
+      <button onclick="location.href='payout.html'">💸 Cairkan Saldo</button>
+      <button onclick="window.location.href='add-generator.html'">➕ Tambah Generator</button>
+      <button onclick="window.location.href='dashboard-user.html'">📊 Dashboard Energi</button>
     </div>
-  </div>
+    <hr />
 
-  <div class="container">
-    <h3>Saldo Dompet Digital & Energi Mandiri</h3>
-    <p id="saldoText">Rp -</p>
-    <button onclick="window.location.href='topup.html'">Top-Up Saldo</button>
-    <button onclick="location.href='payout.html'">💸 Cairkan Saldo</button>
-    <button onclick="window.location.href='add-generator.html'">➕ Tambah Generator</button>
-    <button onclick="window.location.href='dashboard-user.html'">📊 Dashboard Energi</button>  
+    <h1>Selamat Datang di PowerConnect</h1>
+    <p>
+      <strong>PowerConnect</strong> adalah platform digital terintegrasi yang dirancang untuk menghubungkan masyarakat dengan sumber energi terbarukan secara transparan, mudah, dan modern. Kami membuka akses terhadap investasi energi bersih, pembelian energi hijau, serta informasi terbaru tentang perkembangan energi terbarukan di Indonesia.
+    </p>
+    <p>
+      Website ini menyediakan fitur <strong>ewallet</strong> untuk top-up, pembelian energi, dan investasi langsung. Juga tersedia peta interaktif berbasis <strong>Leaflet.js</strong> dan grafik investasi real-time dengan <strong>Chart.js</strong>.
+    </p>
+    <p>
+      Pengguna dapat berdiskusi melalui sistem komentar bertingkat dan mengelola akun dengan aman. Admin dapat memverifikasi transaksi dan mengelola berita.
+    </p>
+    <p>
+      <strong>Project UTS PWL oleh Farrel Laogi Murrjitama - 202231096</strong>
+    </p>
+    <img src="uploads\pas foto merah.png" alt="Creator" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;" />
+    <hr />
   </div>
 
   <script src="js/main.js"></script>
@@ -55,11 +70,16 @@
             <p><strong>Username:</strong> ${user.username}</p>
             <p><strong>Email:</strong> ${user.email}</p>
           `;
-                if (user.image) {
-                  document.getElementById('fotoProfil').src = `/uploads/${user.image}`;
-                } else {
-                  document.getElementById('fotoProfil').src = 'https://via.placeholder.com/100?text=User';
-                }
+
+          const fotoElement = document.getElementById('fotoProfil');
+          if (user.image) {
+            fotoElement.src = user.image; // ✅ gunakan URL langsung dari Cloudinary
+          } else {
+            fotoElement.src = 'https://via.placeholder.com/100?text=User';
+          }
+        })
+        .catch(err => {
+          console.error("❌ Gagal ambil data akun:", err);
         });
     });
   </script>

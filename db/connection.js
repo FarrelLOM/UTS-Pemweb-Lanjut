@@ -1,19 +1,19 @@
-var mysql = require( "mysql" ) ;
+const mysql = require('mysql');
 
-var hostname = "ztoz1.h.filess.io" ;
-var database = "PLNEnergy_splitfully" ;
-var port = "61001" ;
-var username = "PLNEnergy_splitfully" ;
-var password = "91a7ca77deef8b1a3823015e2dd9e840f0aefb56" ;
+const db = mysql.createConnection({
+  host: 'ztoz1.h.filess.io',
+  user: 'PLNEnergy_splitfully',
+  password: '91a7ca77deef8b1a3823015e2dd9e840f0aefb56',             // ubah jika ada password MySQL Anda
+  database: 'PLNEnergy_splitfully',    // pastikan sesuai dengan nama database Anda
+  port : "61001"
+});
 
-var db = mysql.createConnection({ host: hostname, user: username, password, database, port, }) ;
+db.connect((err) => {
+  if (err) {
+    console.error('❌ Gagal koneksi ke database:', err);
+  } else {
+    console.log('✅ Terhubung ke MySQL (pln_energy)');
+  }
+});
 
-db.connect(function (err) { if (err) throw err ;
-
- console.log("Connected!") ;
-
-}) ;
-
-db.query("SELECT 1+1").on("result", function (row) { console.log(row) ;
-
-}) ;
+module.exports = db;
