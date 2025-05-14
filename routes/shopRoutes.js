@@ -1,21 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
-const db = require('../db/connection');
 const fs = require('fs');
+const db = require('../db/connection');
+const cloudinary = require('../utils/cloudinary');
 
-// Setup direktori upload
-const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+// Upload sementara ke /temp sebelum Cloudinary
+const upload = multer({ dest: 'temp/' });
 
-const storage = multer.diskStorage({
-  destination: (_, __, cb) => cb(null, uploadDir),
-  filename: (_, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
-
-// Ambil semua item alat untuk shop list
+// GET /shop → ambil semua produk "alat"
 router.get('/shop', (req, res) => {
   const query = `SELECT * FROM items WHERE type = 'alat' ORDER BY created_at DESC`;
   db.query(query, (err, results) => {
@@ -24,8 +17,8 @@ router.get('/shop', (req, res) => {
   });
 });
 
-// Tambah item baru (alat/energi)
-router.post('/add-item', upload.single('gambar'), (req, res) => {
+// POST /add-item → tambah produk baru (alat atau energi)
+router.post('/add-item', upload.single('gambar'), async (req, res) => {
   const userId = req.session.user?.id;
   if (!userId) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
@@ -34,7 +27,19 @@ router.post('/add-item', upload.single('gambar'), (req, res) => {
     stok = null, lokasi = null
   } = req.body;
 
-  const image = req.file ? '/uploads/' + req.file.filename : null;
+  let imageUrl = null;
+  try {
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'uploads'
+      });
+      imageUrl = result.secure_url;
+      fs.unlinkSync(req.file.path); // Hapus file sementara
+    }
+  } catch (err) {
+    console.error('❌ Gagal upload ke Cloudinary:', err);
+    return res.status(500).json({ message: 'Gagal upload gambar' });
+  }
 
   const sql = `
     INSERT INTO items (user_id, type, name, description, price, image, energy_wh, stock, geo_link, created_at)
@@ -43,13 +48,14 @@ router.post('/add-item', upload.single('gambar'), (req, res) => {
 
   db.query(sql, [
     userId, jenis, name, description, price,
-    image, jumlah || null, stok || null, lokasi || null
+    imageUrl, jumlah || null, stok || null, lokasi || null
   ], (err) => {
     if (err) {
       console.error('❌ Gagal tambah item:', err);
       return res.status(500).json({ message: 'Gagal menambahkan produk' });
     }
 
+    console.log(`📦 User #${userId} menjual ${jenis} - ${name}`);
     res.json({ success: true });
   });
 });

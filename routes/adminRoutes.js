@@ -2,29 +2,46 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
 
-// Cek admin
-function isAdmin(req, res, next) {
-  if (req.session.user?.role === 'admin') next();
-  else res.status(403).json({ message: 'Forbidden' });
-}
-
-// Ambil permintaan top-up
-router.get('/admin/topups', isAdmin, (req, res) => {
+// 🔌 Ambil penjualan energi aktif
+router.get('/admin/energy-sales', (req, res) => {
   const query = `
-    SELECT t.id, t.amount, u.email
-    FROM topup_requests t
-    JOIN users u ON t.user_id = u.id
-    WHERE t.status = 'pending'
+    SELECT i.id, i.name, i.price, i.image, u.email AS seller_email
+    FROM items i
+    JOIN users u ON i.user_id = u.id
+    WHERE i.type = 'energi'
+    ORDER BY i.created_at DESC
   `;
 
   db.query(query, (err, results) => {
-    if (err) return res.status(500).json([]);
+    if (err) {
+      console.error('❌ Gagal ambil energi:', err);
+      return res.status(500).json([]);
+    }
     res.json(results);
   });
 });
 
-// Setujui top-up
-router.post('/admin/topups/approve/:id', isAdmin, (req, res) => {
+// 💳 Ambil permintaan top-up (pending)
+router.get('/admin/topups', (req, res) => {
+  const query = `
+    SELECT t.id, t.amount, t.proof_image, u.email
+    FROM topup_requests t
+    JOIN users u ON t.user_id = u.id
+    WHERE t.status = 'pending'
+    ORDER BY t.requested_at DESC
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('❌ Gagal ambil top-up:', err);
+      return res.status(500).json([]);
+    }
+    res.json(results);
+  });
+});
+
+// ✅ Setujui permintaan top-up (langsung tambah saldo)
+router.post('/admin/topups/approve/:id', (req, res) => {
   const id = req.params.id;
 
   const query = `
@@ -35,28 +52,21 @@ router.post('/admin/topups/approve/:id', isAdmin, (req, res) => {
   `;
 
   db.query(query, [id], err => {
-    if (err) return res.status(500).json({ message: 'Gagal approve' });
+    if (err) {
+      console.error('❌ Gagal setujui topup:', err);
+      return res.status(500).json({ message: 'Gagal approve topup' });
+    }
+
+    // Hapus data dari tabel topup_requests jika perlu
+    db.query('DELETE FROM topup_requests WHERE id = ?', [id]);
+
+    console.log(`✅ Top-up ID ${id} telah disetujui`);
     res.json({ success: true });
   });
 });
 
-// Ambil daftar energi yang dijual seller
-router.get('/admin/energy-sales', isAdmin, (req, res) => {
-  const query = `
-    SELECT i.id, i.name, i.price, u.email AS seller_email
-    FROM items i
-    JOIN users u ON i.user_id = u.id
-    WHERE i.type = 'energi'
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) return res.status(500).json([]);
-    res.json(results);
-  });
-});
-
-// Simulasi beli energi oleh admin
-router.post('/admin/energy/buy/:id', isAdmin, (req, res) => {
+// ⚡ Simulasi beli energi oleh admin (langsung tambah saldo ke seller)
+router.post('/admin/energy/buy/:id', (req, res) => {
   const itemId = req.params.id;
 
   const query = `
@@ -67,7 +77,15 @@ router.post('/admin/energy/buy/:id', isAdmin, (req, res) => {
   `;
 
   db.query(query, [itemId], err => {
-    if (err) return res.status(500).json({ message: 'Gagal beli energi' });
+    if (err) {
+      console.error('❌ Gagal beli energi:', err);
+      return res.status(500).json({ message: 'Gagal beli energi' });
+    }
+
+    // Hapus item energi setelah dibeli
+    db.query('DELETE FROM items WHERE id = ?', [itemId]);
+
+    console.log(`✅ Energi ID ${itemId} berhasil dibeli oleh PLN`);
     res.json({ success: true });
   });
 });

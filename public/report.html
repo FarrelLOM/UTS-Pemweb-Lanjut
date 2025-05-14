@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Laporan Energi / Sanitasi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -10,22 +11,22 @@
   <button class="menu-toggle" id="burgerBtn">☰</button>
 
   <!-- Sidebar kiri -->
-  <div class="sidebar" id="sidebarMenu">
+  <nav class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
     <a href="cart.html" class="nav-link">🧺 Keranjang</a>
     <a href="account.html" class="nav-link">👤 Akun</a>
     <a href="add-item.html" class="nav-link">➕ Jual Produk</a>
     <a href="marketplace.html" class="nav-link">🛠️ Beli Alat</a>
-    <a href="report.html" class="nav-link">📣 Lapor</a>
     <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
     <a href="topup.html" class="nav-link">💰 Top-Up</a>
     <a href="payout.html" class="nav-link">💸 Cairkan</a>
     <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
     <a href="news.html" class="nav-link">📰 Berita</a>
-  </div>
+    <a href="kalkulator.html" class="nav-link">🧮 Kalkulator</a>
+  </nav>
 
   <!-- Konten utama -->
-  <div class="main-content">
+  <main class="main-content">
     <h2>Kirim Laporan Kondisi Daerah</h2>
     <form id="reportForm" enctype="multipart/form-data">
       <label for="region">Nama Wilayah</label>
@@ -51,7 +52,7 @@
 
       <button type="submit">Kirim Laporan</button>
     </form>
-  </div>
+  </main>
 
   <script src="js/main.js"></script>
   <script src="js/report.js"></script>

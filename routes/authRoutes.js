@@ -1,13 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const db = require('../db/connection');
 
+// ✅ Register user
 router.post('/register', (req, res) => {
   const { username, email, password } = req.body;
-  User.create(username, email, password, (err) => {
-    if (err) return res.status(500).json({ message: 'Registrasi gagal' });
-    console.log(`✅ Registrasi: ${email}`);
-    res.json({ success: true });
+
+  // Cek apakah email sudah ada
+  db.query('SELECT id FROM users WHERE email = ?', [email], (err, results) => {
+    if (err) return res.status(500).json({ message: 'Error saat verifikasi email' });
+
+    if (results.length > 0) {
+      return res.status(409).json({ message: 'Email sudah terdaftar!' });
+    }
+
+    // Lanjutkan registrasi
+    User.create(username, email, password, (err) => {
+      if (err) return res.status(500).json({ message: 'Registrasi gagal' });
+      console.log(`✅ Registrasi: ${email}`);
+      res.json({ success: true });
+    });
   });
 });
 

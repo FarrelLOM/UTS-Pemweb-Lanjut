@@ -8,6 +8,22 @@ const fs = require('fs');
 // Gunakan multer dengan folder sementara
 const upload = multer({ dest: 'temp/' });
 
+
+// 🔍 Verifikasi apakah email sudah dipakai
+router.post('/verify-email', (req, res) => {
+  const { email } = req.body;
+
+  db.query('SELECT id FROM users WHERE email = ?', [email], (err, results) => {
+    if (err) return res.status(500).json({ message: 'Gagal cek email' });
+
+    if (results.length > 0) {
+      return res.json({ exists: true, message: 'Email sudah terdaftar' });
+    } else {
+      return res.json({ exists: false, message: 'Email tersedia' });
+    }
+  });
+});
+
 // ✅ GET /account - ambil data akun user saat ini
 router.get('/account', (req, res) => {
   const userId = req.session.user?.id;

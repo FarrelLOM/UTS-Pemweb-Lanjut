@@ -2,16 +2,12 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
 const multer = require('multer');
-const path = require('path');
+const fs = require('fs');
+const cloudinary = require('../utils/cloudinary');
 
-const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
-const storage = multer.diskStorage({
-  destination: (_, __, cb) => cb(null, uploadDir),
-  filename: (_, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-const upload = multer({ storage });
+const upload = multer({ dest: 'temp/' });
 
-// Ambil saldo
+// Ambil saldo user
 router.get('/saldo', (req, res) => {
   const userId = req.session.user?.id;
   if (!userId) return res.status(401).json({ saldo: 0 });
@@ -22,20 +18,43 @@ router.get('/saldo', (req, res) => {
   });
 });
 
-// Top-up saldo (langsung menambahkan saldo user)
-router.post('/topup', upload.single('bukti'), (req, res) => {
+// Ajukan topup saldo (disetujui admin nanti)
+router.post('/topup', upload.single('bukti'), async (req, res) => {
   const userId = req.session.user?.id;
   const { amount } = req.body;
-  const image = req.file ? '/uploads/' + req.file.filename : null;
 
-  if (!userId || !amount || !image) return res.status(400).json({ message: 'Data tidak lengkap' });
+  if (!userId || !amount || !req.file) {
+    return res.status(400).json({ message: 'Data tidak lengkap' });
+  }
 
-  db.query('UPDATE users SET saldo = saldo + ? WHERE id = ?', [amount, userId], (err) => {
-    if (err) return res.status(500).json({ message: 'Top-up gagal' });
+  try {
+    // Upload ke Cloudinary
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'uploads'
+    });
+    const imageUrl = result.secure_url;
+    fs.unlinkSync(req.file.path);
 
-    console.log(`💰 Top-up Rp${amount} user ${userId}`);
-    res.json({ success: true });
-  });
+    // Simpan ke tabel topup_requests
+    const sql = `
+      INSERT INTO topup_requests (user_id, amount, proof_image, status, requested_at)
+      VALUES (?, ?, ?, 'pending', NOW())
+    `;
+
+    db.query(sql, [userId, amount, imageUrl], err => {
+      if (err) {
+        console.error('❌ Gagal simpan topup:', err);
+        return res.status(500).json({ message: 'Top-up gagal' });
+      }
+
+      console.log(`📨 Permintaan topup Rp${amount} dikirim oleh user ${userId}`);
+      res.json({ success: true });
+    });
+
+  } catch (err) {
+    console.error('❌ Upload Cloudinary gagal:', err);
+    res.status(500).json({ message: 'Upload gagal' });
+  }
 });
 
 module.exports = router;

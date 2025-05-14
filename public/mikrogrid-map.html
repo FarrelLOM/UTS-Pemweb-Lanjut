@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>Peta Mikrogrid Komunitas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
   <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map {
       height: 80vh;
@@ -31,8 +29,8 @@
     <a href="dashboard-user.html" class="nav-link">📊 Energi</a>
     <a href="topup.html" class="nav-link">💰 Top-Up</a>
     <a href="payout.html" class="nav-link">💸 Cairkan</a>
-    <a href="mikrogrid-map.html" class="nav-link">🗺️ Peta</a>
     <a href="news.html" class="nav-link">📰 Berita</a>
+    <a href="kalkulator.html" class="nav-link">🧮 Kalkulator</a>
   </div>
 
   <div class="main-content">
@@ -41,9 +39,7 @@
   </div>
 
   <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/main.js"></script>
   <script>
     // Inisialisasi peta
@@ -71,6 +67,18 @@
       .catch(err => {
         console.error('Gagal memuat titik mikrogrid:', err);
       });
+
+    // Responsive sidebar toggle
+    function toggleMenu() {
+      document.getElementById('sidebarMenu').classList.toggle('active');
+    }
+    document.addEventListener('click', function(e) {
+      const sidebar = document.getElementById('sidebarMenu');
+      const btn = document.querySelector('.menu-toggle');
+      if (window.innerWidth <= 600 && !sidebar.contains(e.target) && e.target !== btn) {
+        sidebar.classList.remove('active');
+      }
+    });
   </script>
 </body>
 </html>
