@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <title>Marketplace Alat Hemat Energi | PLN Energy</title>
   <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <!-- Tombol burger di pojok kiri -->
+  <!-- Tombol burger di pojok kanan atas -->
   <button class="menu-toggle" id="burgerBtn">☰</button>
 
-  <!-- Sidebar kiri -->
+  <!-- Sidebar kanan -->
   <div class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
     <a href="cart.html" class="nav-link">🧺 Keranjang</a>
@@ -32,6 +33,7 @@
 
   <script src="js/main.js"></script>
   <script>
+    // Fungsi untuk memuat produk dari server
     function loadMarketplace() {
       fetch('/shop?type=alat')
         .then(res => res.json())

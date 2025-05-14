@@ -17,7 +17,7 @@
   </style>
 </head>
 <body class="no-sidebar">
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <button class="menu-toggle" id="burgerBtn">☰</button>
 
   <div class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
@@ -42,6 +42,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="js/main.js"></script>
   <script>
+
     // Inisialisasi peta
     const map = L.map('map').setView([-6.2, 106.8], 11); // Koordinat default Jakarta
 
@@ -67,18 +68,6 @@
       .catch(err => {
         console.error('Gagal memuat titik mikrogrid:', err);
       });
-
-    // Responsive sidebar toggle
-    function toggleMenu() {
-      document.getElementById('sidebarMenu').classList.toggle('active');
-    }
-    document.addEventListener('click', function(e) {
-      const sidebar = document.getElementById('sidebarMenu');
-      const btn = document.querySelector('.menu-toggle');
-      if (window.innerWidth <= 600 && !sidebar.contains(e.target) && e.target !== btn) {
-        sidebar.classList.remove('active');
-      }
-    });
   </script>
 </body>
 </html>

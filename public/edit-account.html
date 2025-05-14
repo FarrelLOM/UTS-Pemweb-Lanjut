@@ -13,24 +13,24 @@
     <a href="index.html" class="nav-link" onclick="logout()">🚪 Logout</a>
   </div>
 
-<div class="main-content">
-  <h2>Edit Akun</h2>
-  <form id="editForm" enctype="multipart/form-data">
-    <label>Email Baru</label>
-    <div style="display: flex; gap: 8px; align-items: center;">
-      <input type="email" name="email" placeholder="Email baru" required />
-      <button type="button" name="verivy" id="verivyBtn">Verifikasi Email</button>
-    </div>
+  <div class="main-content">
+    <h2>Edit Akun</h2>
+    <form id="editForm" enctype="multipart/form-data">
+      <label>Email Baru</label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="email" name="email" placeholder="Email baru" required />
+        <button type="button" name="verivy" id="verivyBtn">Verifikasi Email</button>
+      </div>
 
-    <label>Password Baru</label>
-    <input type="password" name="password" placeholder="Password baru" required />
+      <label>Password Baru</label>
+      <input type="password" name="password" placeholder="Password baru" required />
 
-    <label>Foto Profil (optional)</label>
-    <input type="file" name="foto" accept="image/*" />
+      <label>Foto Profil (optional)</label>
+      <input type="file" name="foto" accept="image/*" />
 
-    <button type="submit">Simpan Perubahan</button>
-  </form>
-</div>
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+  </div>
 
   <script src="js/main.js"></script>
   <script>
@@ -51,18 +51,6 @@
             alert(data.message || "Gagal memperbarui akun");
           }
         });
-    });
-
-    // Responsive sidebar toggle
-    function toggleMenu() {
-      document.getElementById('sidebarMenu').classList.toggle('active');
-    }
-    document.addEventListener('click', function(e) {
-      const sidebar = document.getElementById('sidebarMenu');
-      const btn = document.querySelector('.menu-toggle');
-      if (window.innerWidth <= 600 && !sidebar.contains(e.target) && e.target !== btn) {
-        sidebar.classList.remove('active');
-      }
     });
   </script>
 </body>

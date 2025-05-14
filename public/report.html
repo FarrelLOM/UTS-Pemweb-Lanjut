@@ -55,6 +55,28 @@
   </main>
 
   <script src="js/main.js"></script>
-  <script src="js/report.js"></script>
+  <script>
+
+    // Form submit logic (optional, if not handled in js/report.js)
+    document.getElementById('reportForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      fetch('/report', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert('Laporan berhasil dikirim!');
+          this.reset();
+        } else {
+          alert(data.message || 'Gagal mengirim laporan');
+        }
+      })
+      .catch(() => alert('Terjadi kesalahan saat mengirim laporan.'));
+    });
+  </script>
 </body>
 </html>

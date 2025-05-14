@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="no-sidebar">
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <button class="menu-toggle" id="burgerBtn">☰</button>
 
   <div class="sidebar" id="sidebarMenu">
     <a href="cart.html" class="nav-link">🧺 Keranjang</a>
@@ -30,6 +30,7 @@
 
   <script src="js/main.js"></script>
   <script>
+
     fetch('/shop')
       .then(res => res.json())
       .then(data => {
@@ -78,18 +79,6 @@
         window.location.href = 'checkout.html';
       });
     }
-
-    // Responsive sidebar toggle
-    function toggleMenu() {
-      document.getElementById('sidebarMenu').classList.toggle('active');
-    }
-    document.addEventListener('click', function(e) {
-      const sidebar = document.getElementById('sidebarMenu');
-      const btn = document.querySelector('.menu-toggle');
-      if (window.innerWidth <= 600 && !sidebar.contains(e.target) && e.target !== btn) {
-        sidebar.classList.remove('active');
-      }
-    });
   </script>
 </body>
 </html>

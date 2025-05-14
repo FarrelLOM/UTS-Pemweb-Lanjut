@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <title>Jual Produk Energi / Alat | PLN Energy</title>
   <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <!-- Tombol burger di pojok kiri -->
+  <!-- Tombol burger di pojok kiri atas -->
   <button class="menu-toggle" id="burgerBtn">☰</button>
 
   <!-- Sidebar kiri -->
@@ -66,5 +67,19 @@
 
   <script src="js/main.js"></script>
   <script src="js/add-item.js"></script>
+  <script>
+    // Toggle form fields based on jenis
+    document.getElementById('jenis').addEventListener('change', function() {
+      const energi = document.getElementById('formEnergi');
+      const alat = document.getElementById('formAlat');
+      if (this.value === 'energi') {
+        energi.style.display = '';
+        alat.style.display = 'none';
+      } else {
+        energi.style.display = 'none';
+        alat.style.display = '';
+      }
+    });
+  </script>
 </body>
 </html>

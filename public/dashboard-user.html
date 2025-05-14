@@ -5,9 +5,11 @@
   <title>Dashboard Penghasilan Energi | PLN Energy</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body class="no-sidebar">
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <!-- Burger button kanan atas -->
+  <button class="menu-toggle" id="burgerBtn">☰</button>
   <div class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
     <a href="cart.html" class="nav-link">🧺 Keranjang</a>
@@ -32,6 +34,7 @@
 
   <script src="js/main.js"></script>
   <script>
+    // Ambil data dari server
     fetch('/dashboard-user/data')
       .then(res => res.json())
       .then(data => {

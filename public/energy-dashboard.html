@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="no-sidebar">
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <button class="menu-toggle" id="burgerBtn">☰</button>
 
   <div class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
@@ -32,6 +32,7 @@
 
   <script src="js/main.js"></script>
   <script>
+    // Ambil data pembangkit dari server
     fetch('/energy/active-generators')
       .then(res => res.json())
       .then(data => {
@@ -49,7 +50,7 @@
           div.innerHTML = `
             <h4>${gen.name}</h4>
             <p>Harga per kWh: Rp${gen.price}</p>
-            <p>Lokasi: ${gen.geo_link}</p>
+            <p>Lokasi: <a href="${gen.geo_link}" target="_blank">${gen.geo_link}</a></p>
             <p>Energi/hari: ${gen.energy_wh || 0} Wh</p>
           `;
           list.appendChild(div);

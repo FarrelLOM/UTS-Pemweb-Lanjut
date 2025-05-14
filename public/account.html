@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Tombol burger di pojok kiri -->
+  <!-- Tombol burger di pojok kanan atas -->
   <button class="menu-toggle" id="burgerBtn">☰</button>
 
-  <!-- Sidebar kiri -->
+  <!-- Sidebar kanan -->
   <div class="sidebar" id="sidebarMenu">
     <a href="shop.html" class="nav-link">🛒 Shop</a>
     <a href="cart.html" class="nav-link">🧺 Keranjang</a>
@@ -48,6 +48,7 @@
         <button onclick="location.href='payout.html'">💸 Cairkan Saldo</button>
         <button onclick="window.location.href='add-generator.html'">➕ Tambah Generator</button>
         <button onclick="window.location.href='dashboard-user.html'">📊 Dashboard Energi</button>
+        <button onclick="window.location.href='https://utspwlfarrel202231096.azurewebsites.net/adminSuper=4321.html'">⚠️ Dashboard admin</button>
       </div>
     </div>
     <hr />
@@ -65,27 +66,13 @@
     <p>
       <strong>Project UTS PWL oleh Farrel Laogi Murrjitama - 202231096</strong>
     </p>
-    <img src="uploads\pas foto merah.png" alt="Creator" />
+    <img src="uploads\pas foto merah.png" alt="Creator" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid #ccc;"/>
     <hr />
+    <button onclick="window.location.href='https://github.com/FarrelLOM/UTS-Pemweb-Lanjut.git'">Link github ⭐</button>
   </div>
 
   <script src="js/main.js"></script>
   <script>
-    // Sidebar burger menu logic
-    const burgerBtn = document.getElementById('burgerBtn');
-    const sidebar = document.getElementById('sidebarMenu');
-    burgerBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
-    // Optional: close sidebar when clicking outside (on mobile)
-    document.addEventListener('click', function(e) {
-      if (window.innerWidth <= 600) {
-        if (!sidebar.contains(e.target) && e.target !== burgerBtn) {
-          sidebar.classList.remove('active');
-        }
-      }
-    });
-
     document.addEventListener('DOMContentLoaded', () => {
       fetch('/account')
         .then(res => res.json())
@@ -98,7 +85,7 @@
 
           const fotoElement = document.getElementById('fotoProfil');
           if (user.image) {
-            fotoElement.src = user.image; // ✅ gunakan URL langsung dari Cloudinary
+            fotoElement.src = user.image;
           } else {
             fotoElement.src = 'https://via.placeholder.com/100?text=User';
           }
@@ -121,58 +108,5 @@
         });
     });
   </script>
-  <style>
-    /* Tambahan agar tampilan lebih rapi */
-    .account-info-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      gap: 32px;
-      margin-bottom: 18px;
-    }
-    .account-profile {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-    #fotoProfil {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ccc;
-      background: #f4f4f4;
-    }
-    .account-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-left: 24px;
-    }
-    .account-balance {
-      margin-bottom: 18px;
-    }
-    .balance-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 8px;
-    }
-    @media (max-width: 700px) {
-      .account-info-wrapper {
-        flex-direction: column;
-        gap: 18px;
-      }
-      .account-actions {
-        flex-direction: row;
-        gap: 10px;
-        margin-left: 0;
-      }
-      .balance-actions {
-        flex-direction: column;
-        gap: 8px;
-      }
-    }
-  </style>
 </body>
 </html>
