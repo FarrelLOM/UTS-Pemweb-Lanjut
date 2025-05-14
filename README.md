@@ -5,4 +5,4 @@
 <p>Bila terdapat kendala harap di refresh atau logout akun dahulu</p>
 <P>link : https://utspwlfarrel202231096.azurewebsites.net/</P>
 <p>Nama : Farrel Laogi Murjitama</p>
-<p>>NIM : 202231096</p>
+<p>NIM : 202231096</p>
