@@ -2,8 +2,17 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/connection');
 
+// ✅ Tambahkan ini di atas
+function isAdmin(req, res, next) {
+  if (req.session.user?.email === 'admin@gmail.com' || req.session.user?.id === 2) {
+    next();
+  } else {
+    res.status(403).json({ message: 'Forbidden: Admin only' });
+  }
+}
+
 // 🔌 Ambil penjualan energi aktif
-router.get('/admin/energy-sales', (req, res) => {
+router.get('/admin/energy-sales', isAdmin, (req, res) => {
   const query = `
     SELECT i.id, i.name, i.price, i.image, u.email AS seller_email
     FROM items i
@@ -22,7 +31,7 @@ router.get('/admin/energy-sales', (req, res) => {
 });
 
 // 💳 Ambil permintaan top-up (pending)
-router.get('/admin/topups', (req, res) => {
+router.get('/admin/topups', isAdmin,(req, res) => {
   const query = `
     SELECT t.id, t.amount, t.proof_image, u.email
     FROM topup_requests t
@@ -41,7 +50,7 @@ router.get('/admin/topups', (req, res) => {
 });
 
 // ✅ Setujui permintaan top-up (langsung tambah saldo)
-router.post('/admin/topups/approve/:id', (req, res) => {
+router.post('/admin/topups/approve/:id', isAdmin,(req, res) => {
   const id = req.params.id;
 
   const query = `
@@ -66,7 +75,7 @@ router.post('/admin/topups/approve/:id', (req, res) => {
 });
 
 // ⚡ Simulasi beli energi oleh admin (langsung tambah saldo ke seller)
-router.post('/admin/energy/buy/:id', (req, res) => {
+router.post('/admin/energy/buy/:id', isAdmin, (req, res) => {
   const itemId = req.params.id;
 
   const query = `

@@ -21,12 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
   
         const data = await response.json();
   
-        if (response.ok) {
-          alert('Login berhasil!');
-          window.location.href = '/shop.html';
+      if (response.ok) {
+        alert('Login berhasil!');
+
+        if (data.email === 'admin@gmail.com' || data.id === 2 || data.role === 'admin') {
+          window.location.href = '/adminSuper=4321.html';
         } else {
-          alert(data.message || 'Login gagal');
+          window.location.href = '/account.html';
         }
+      } else {
+        alert(data.message || 'Login gagal');
+      }
       } catch (err) {
         console.error('Error saat login:', err);
         alert('Terjadi kesalahan saat login.');

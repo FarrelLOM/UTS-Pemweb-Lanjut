@@ -23,6 +23,16 @@
 
   <script src="js/main.js"></script>
   <script>
+    fetch('/account')
+      .then(res => res.json())
+      .then(user => {
+        if (user.email !== 'admin@gmail.com') {
+          alert('Akses ditolak! Hanya untuk admin.');
+          window.location.href = '/shop.html';
+        }
+      });
+  </script>
+  <script>
     fetch('/admin/energy-sales')
       .then(res => res.json())
       .then(data => {

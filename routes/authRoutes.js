@@ -28,9 +28,16 @@ router.post('/login', (req, res) => {
   const { email, password } = req.body;
   User.findByCredentials(email, password, (err, user) => {
     if (err || !user) return res.status(401).json({ message: 'Login gagal' });
+    
     req.session.user = user;
+
     console.log(`✅ Login: ${email}`);
-    res.json({ success: true });
+    res.json({
+      success: true,
+      id: user.id,
+      email: user.email,
+      username: user.username
+    });
   });
 });
 
